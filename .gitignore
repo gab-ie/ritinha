@@ -1,0 +1,44 @@
+# Referências e exportações do Figma na raiz
+/referencia front end/
+/referencia-frontend/
+/referencia-telas/
+/referencia-telas-atualizadas/
+/referencias tela/
+/referencia telas atualizadas/
+
+# Dependências locais
+node_modules/
+.venv/
+venv/
+
+# Configuração local e segredos
+.env
+.env.*
+!.env.example
+
+# Caches e arquivos temporários
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+.coverage
+.coverage.*
+htmlcov/
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+*.log
+
+# Saídas de build
+dist/
+dist-ssr/
+build/
+*.egg-info/
+
+# Backups
+*.zip

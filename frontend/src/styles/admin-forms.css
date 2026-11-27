@@ -1,0 +1,157 @@
+.app-shell:has(.admin-form-page) .page-content {
+  padding: 28px 32px 64px;
+}
+
+.admin-form-page .page-head {
+  margin-bottom: 18px;
+}
+
+.admin-form-page .page-kicker {
+  display: none;
+}
+
+.admin-form-page h1 {
+  font-size: 30px;
+}
+
+.admin-form-page .page-head p {
+  font-size: 14px;
+}
+
+.admin-form {
+  display: grid;
+  gap: 24px;
+  min-width: 0;
+}
+
+.admin-form .card {
+  min-width: 0;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: none;
+}
+
+.admin-form .card-head {
+  margin-bottom: 14px;
+}
+
+.admin-form .card-head h2 {
+  margin-bottom: 13px;
+  font-size: 19px;
+}
+
+.admin-form .card-head p,
+.admin-form-note {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.admin-form .form-grid {
+  gap: 14px 16px;
+  margin-bottom: 0;
+}
+
+.admin-form .field {
+  min-width: 0;
+  margin-bottom: 0;
+  font-size: 13px;
+}
+
+.admin-form .field input,
+.admin-form .field select,
+.admin-form-account-action {
+  height: 45px;
+}
+
+.admin-form .select-wrap {
+  border: 0;
+}
+
+.admin-form .select-wrap select {
+  text-overflow: ellipsis;
+}
+
+.admin-form .select-wrap select:has(option[value=""]:checked) {
+  color: var(--muted);
+}
+
+.admin-form-note {
+  margin-bottom: 0;
+}
+
+.admin-form .form-grid + .admin-form-note {
+  margin-top: 14px;
+}
+
+.admin-form-note + .field {
+  margin-top: 14px;
+}
+
+.admin-form-account-action {
+  justify-content: flex-start;
+}
+
+.admin-form .form-actions {
+  justify-content: flex-end;
+  margin-top: 0;
+}
+
+.admin-form .form-actions .button {
+  min-height: 45px;
+  min-width: 180px;
+  font-size: 14px;
+}
+
+.admin-form .form-actions .button--outline {
+  background: transparent;
+}
+
+.admin-form .form-actions .button--outline:hover {
+  background: var(--white);
+}
+
+.admin-form .form-actions .button--primary {
+  min-width: 230px;
+}
+
+.admin-form .form-actions .button--primary:disabled,
+.admin-form-account-action.button--soft:disabled {
+  background: var(--apple-soft);
+  border-color: #dce8d0;
+  color: var(--muted);
+  opacity: 1;
+}
+
+@media (min-width: 691px) {
+  .app-shell:has(.admin-form-page) .topbar {
+    display: none;
+  }
+
+  .app-shell:has(.admin-form-page) .nav-link > svg {
+    display: none;
+  }
+
+  .app-shell:has(.admin-form-page) .nav-link:has(svg)::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex: none;
+    background: var(--lilac);
+  }
+
+  .app-shell:has(.admin-form-page) .nav-link.is-active::before {
+    background: var(--apple);
+  }
+}
+
+@media (max-width: 690px) {
+  .app-shell:has(.admin-form-page) .page-content {
+    padding: 21px 15px 55px;
+  }
+
+  .admin-form .form-actions .button {
+    flex: 1 1 180px;
+    min-width: 0;
+  }
+}
