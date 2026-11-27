@@ -44,7 +44,7 @@ export function Card({ title, description, children, action, className = '' }) {
 }
 export function Stats({ items }) {
   return <div className="stats-grid">{items.map((it) => <div className="stat" key={it.title}>
-    <div className="stat-label">{it.title}</div><div className="stat-value">—</div>
+    <div className="stat-label">{it.title}</div><div className="stat-value">{it.value ?? '—'}</div>
     {it.note && <div className="stat-note">{it.note}</div>}
   </div>)}</div>;
 }
@@ -64,13 +64,28 @@ export function DataTable({ columns, children, empty }) {
 export function TableEmpty({ columns, title, description, icon }) {
   return <DataTable columns={columns} empty={<Empty title={title} description={description} icon={icon}/>} />;
 }
-export function Field({ label, placeholder, type = 'text', options, required = false, multi = false, readOnly = false, disabled = false, min, step }) {
+export function RecordTable({ columns, rows, ...emptyState }) {
+  if (!rows.length) return <TableEmpty columns={columns} {...emptyState} />;
+
+  return <DataTable columns={columns}>
+    {rows.map(({ id, cells }) => (
+      <tr key={id}>{cells.map((cell, index) => <td key={columns[index]}>{cell ?? '—'}</td>)}</tr>
+    ))}
+  </DataTable>;
+}
+export function RecordLabel({ title, detail }) {
+  return <span className="record-label"><strong>{title}</strong>{detail && <small>{detail}</small>}</span>;
+}
+export function RecordStatus({ children, tone = 'neutral' }) {
+  return <span className={`record-status record-status--${tone}`}>{children}</span>;
+}
+export function Field({ label, placeholder, type = 'text', options, required = false, multi = false, readOnly = false, disabled = false, defaultValue = '', min, step }) {
   const id = useId();
   const common = { id, name: label, required, disabled: disabled || readOnly };
   return <label className="field" htmlFor={id}><span className="field-label">{label}{required && <em> *</em>}</span>
-    {multi ? <textarea {...common} rows={4} placeholder={placeholder || ''} />
-    : options ? <span className="select-wrap"><select {...common} defaultValue=""><option value="">{placeholder || 'Selecionar'}</option>{options.map(o=><option key={o} value={o}>{o}</option>)}</select><Glyph name="chevron-down" size={15}/></span>
-    : <input {...common} type={type} min={min} step={step} placeholder={placeholder || ''} />}
+    {multi ? <textarea {...common} defaultValue={defaultValue} rows={4} placeholder={placeholder || ''} />
+    : options ? <span className="select-wrap"><select {...common} defaultValue={defaultValue}><option value="">{placeholder || 'Selecionar'}</option>{options.map(o=><option key={o} value={o}>{o}</option>)}</select><Glyph name="chevron-down" size={15}/></span>
+    : <input {...common} defaultValue={defaultValue} type={type} min={min} step={step} placeholder={placeholder || ''} />}
   </label>;
 }
 export function Filters({ fields, search, action, actionTo }) {

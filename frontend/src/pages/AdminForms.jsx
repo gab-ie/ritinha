@@ -1,6 +1,7 @@
 import { Navigate, useParams } from 'react-router';
 import { Button, Card, Field, FormGrid, PageHead } from '../components/UI';
 import { adminListPaths } from '../config/navigation';
+import { locations, stock, suppliers, units, users } from '../mocks/administration';
 import '../styles/admin-forms.css';
 
 const profiles = ['Recepção', 'Enfermagem', 'Médico', 'Administração'];
@@ -24,7 +25,7 @@ function AdminForm({ title, description, back, submitLabel = 'Salvar cadastro', 
   );
 }
 
-export function UserForm({ editing = false }) {
+export function UserForm({ editing = false, user }) {
   return (
     <AdminForm
       title={editing ? 'Editar usuário' : 'Cadastrar usuário'}
@@ -34,16 +35,16 @@ export function UserForm({ editing = false }) {
     >
       <Card title="Dados do usuário" description={editing ? 'Consulte e atualize as informações cadastrais.' : 'Identificação da conta individual.'}>
         <FormGrid columns={2}>
-          <Field label="Nome completo" placeholder="Informar nome completo" />
-          <Field label="E-mail institucional" type="email" placeholder="Informar endereço de e-mail" />
-          <Field label="Identificação do usuário" placeholder="Informar identificador ou login" />
-          <Field label="Situação da conta" placeholder="Selecionar situação" options={['Ativa', 'Inativa']} />
+          <Field label="Nome completo" placeholder="Informar nome completo" defaultValue={user?.name} />
+          <Field label="E-mail institucional" type="email" placeholder="Informar endereço de e-mail" defaultValue={user?.email} />
+          <Field label="Identificação do usuário" placeholder="Informar identificador ou login" defaultValue={user?.username} />
+          <Field label="Situação da conta" placeholder="Selecionar situação" options={['Ativa', 'Inativa']} defaultValue={user?.status} />
         </FormGrid>
       </Card>
       <Card title="Vínculo e permissões" description={editing ? 'Alterações de perfil modificam os acessos autorizados.' : 'O perfil define os módulos e as informações autorizadas.'}>
         <FormGrid columns={2}>
-          <Field label="Unidade de saúde" placeholder="Selecionar unidade" options={[]} disabled />
-          <Field label="Perfil de acesso" placeholder="Selecionar: Recepção, Enfermagem, Médico ou Administração" options={profiles} />
+          <Field label="Unidade de saúde" placeholder="Selecionar unidade" options={units} disabled={!units.length} defaultValue={user?.unit} />
+          <Field label="Perfil de acesso" placeholder="Selecionar: Recepção, Enfermagem, Médico ou Administração" options={profiles} defaultValue={user?.profile} />
           <Field label="Registro profissional (quando aplicável)" placeholder="Informar conselho e número" />
           <Field label="UF do registro (quando aplicável)" placeholder="Selecionar UF" options={states} />
         </FormGrid>
@@ -76,7 +77,8 @@ export function EditUser() {
     return <Navigate to={adminListPaths.usuarios} replace />;
   }
 
-  return <UserForm editing />;
+  const user = userId ? users.find(record => record.id === userId) : users[0];
+  return <UserForm key={userId} editing user={user} />;
 }
 
 export function NewStockItem() {
@@ -93,7 +95,7 @@ export function NewStockItem() {
       <Card title="Controle de estoque" description="Parâmetros utilizados nos alertas e consultas.">
         <FormGrid columns={2}>
           <Field label="Estoque mínimo" type="number" min={0} step="any" placeholder="Informar quantidade mínima" />
-          <Field label="Localização padrão" placeholder="Selecionar local de armazenamento" options={[]} disabled />
+          <Field label="Localização padrão" placeholder="Selecionar local de armazenamento" options={locations} disabled={!locations.length} />
         </FormGrid>
         <p className="admin-form-note">Lotes, validade e quantidade recebida serão registrados nas movimentações de entrada.</p>
       </Card>
@@ -141,14 +143,14 @@ export function NewMovement() {
       <Card title="Tipo e identificação" description="Defina a operação e o item que será movimentado.">
         <FormGrid columns={2}>
           <Field label="Tipo de movimentação" placeholder="Selecionar tipo" options={['Entrada', 'Saída', 'Transferência', 'Ajuste']} />
-          <Field label="Produto" placeholder="Selecionar item cadastrado" options={[]} disabled />
+          <Field label="Produto" placeholder="Selecionar item cadastrado" options={stock.map(item => item.name)} disabled={!stock.length} />
           <Field label="Quantidade" type="number" min={0} step="any" placeholder="Informar quantidade" />
           <Field label="Unidade / localização" placeholder="Informar local" />
         </FormGrid>
       </Card>
       <Card title="Informações da operação" description="Campos adicionais são aplicáveis conforme o tipo de movimentação.">
         <FormGrid columns={2}>
-          <Field label="Fornecedor / origem (se entrada)" placeholder="Selecionar fornecedor ou origem" />
+          <Field label="Fornecedor / origem (se entrada)" placeholder="Selecionar fornecedor ou origem" options={suppliers.length ? suppliers.filter(supplier => supplier.status === 'Ativo').map(supplier => supplier.name) : undefined} />
           <Field label="Destino (se saída ou transferência)" placeholder="Informar destino" />
           <Field label="Número do lote (se aplicável)" placeholder="Informar lote" />
           <Field label="Validade (se aplicável)" type="date" />

@@ -1,21 +1,44 @@
-import { Button, Card, Empty, Field, Filters, FormActions, FormGrid, PageHead, SectionBlock, Shortcut, Stats, TableEmpty } from '../components/UI';
+import { Button, Card, Field, Filters, FormActions, FormGrid, PageHead, RecordLabel, RecordStatus, RecordTable, SectionBlock, Shortcut, Stats } from '../components/UI';
+import { attendanceMetrics as metrics, steps, todayAttendances } from '../mocks/attendance';
+import { presentationStats } from '../mocks/presentation';
+
+const overviewStats = presentationStats([
+  ['Pacientes registrados', metrics.patients],
+  ['Em fila de espera', metrics.waitingTriage + metrics.waitingConsultation],
+  ['Finalizados hoje', metrics.completed],
+]);
+
+const flowStats = presentationStats([
+  ['Chegadas hoje', metrics.arrivals],
+  ['Aguardando triagem', metrics.waitingTriage],
+  ['Atendimento médico', metrics.inConsultation],
+  ['Concluídos', metrics.completed],
+]);
 
 export function ReceptionOverview(){return <>
   <PageHead title="Visão Geral" description="Bom dia! Confira o movimento da unidade hoje."/>
-  <Stats items={[{title:'Pacientes registrados'},{title:'Em fila de espera'},{title:'Finalizados hoje'}]}/>
-  <Card title="Movimentação do dia" description="Resumo das etapas acompanhadas."><Stats items={[{title:'Chegadas hoje'},{title:'Aguardando triagem'},{title:'Atendimento médico'},{title:'Concluídos'}]}/></Card>
+  <Stats items={overviewStats}/>
+  <Card title="Movimentação do dia" description="Resumo das etapas acompanhadas."><Stats items={flowStats}/></Card>
   <Card title="Acesso rápido" description="Atalhos para ações frequentes da recepção."><div className="shortcut-grid">
     <Shortcut title="Novo cadastro" text="Registrar paciente no sistema." icon="user-round" to="/recepcao/pacientes/novo"/>
     <Shortcut title="Consultar pacientes" text="Buscar e visualizar atendimentos." icon="users" to="/recepcao/atendimentos"/>
     <Shortcut title="Acompanhar recepção" text="Monitorar fila e situação." icon="clipboard-list" to="/recepcao/atendimentos"/>
   </div></Card>
-  <Card title="Últimas atualizações" description="Atividades administrativas recentes."><Empty title="Nenhuma atualização registrada" description="As atividades administrativas recentes serão exibidas aqui." /></Card>
+  <Card title="Últimas atualizações" description="Registros de chegada mais recentes.">
+    <RecordTable columns={['CHEGADA','PACIENTE','ATENDIMENTO']} rows={todayAttendances.slice(0, 4).map(entry => ({
+      id: entry.id, cells: [entry.arrival, <RecordLabel title={entry.patient} detail={entry.patientId}/>, entry.id],
+    }))} title="Nenhuma atualização registrada" description="As atividades administrativas recentes serão exibidas aqui." />
+  </Card>
 </>}
 
 export function ReceptionQueue(){return <>
   <PageHead title="Atendimento e recepção" description="Consulta de atendimentos e acompanhamento das chegadas." action={<Button to="/recepcao/pacientes/novo" icon="plus">Novo cadastro</Button>}/>
   <Card><Filters search="Buscar por nome ou CPF..." fields={[]} />
-  <TableEmpty columns={['PACIENTE','CPF','CHEGADA','SITUAÇÃO','ATENDIMENTO','AÇÃO']} title="Nenhum atendimento registrado" description="Os atendimentos da recepção serão exibidos aqui." /></Card>
+  <RecordTable columns={['PACIENTE','CPF','CHEGADA','SITUAÇÃO','ATENDIMENTO','AÇÃO']} rows={todayAttendances.map(entry => ({
+    id: entry.id,
+    cells: [<RecordLabel title={entry.patient} detail={entry.patientId}/>, null, entry.arrival,
+      <RecordStatus tone={entry.step === steps.completed ? 'complete' : 'neutral'}>{entry.step}</RecordStatus>, entry.id, null],
+  }))} title="Nenhum atendimento registrado" description="Os atendimentos da recepção serão exibidos aqui." /></Card>
 </>}
 
 export function PatientRegistration(){return <>

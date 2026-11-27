@@ -56,3 +56,56 @@ h1,h2,h3,p{margin-top:0}h1{font-size:26px;letter-spacing:-.65px;margin-bottom:7p
 .split-cards > .card {
   min-width: 0;
 }
+
+.data-table td {
+  padding: 12px 13px;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+  line-height: 1.45;
+  vertical-align: middle;
+}
+
+.data-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.record-label {
+  display: grid;
+  gap: 3px;
+}
+
+.record-label small {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.record-status {
+  display: inline-block;
+  border-radius: 6px;
+  padding: 4px 8px;
+  background: var(--page);
+  color: var(--muted);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.record-status--complete {
+  background: var(--apple-soft);
+  color: #45642a;
+}
+
+.record-status--progress {
+  background: var(--lilac-soft);
+  color: var(--purple);
+}
+
+.record-fields {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.stock-alerts .data-table {
+  min-width: 0;
+}
